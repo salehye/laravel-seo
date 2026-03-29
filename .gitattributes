@@ -1,0 +1,36 @@
+# Git attributes file
+# Ensures consistent line endings across platforms
+
+# Set default behavior to CRLF on Windows, LF on Unix
+* text=auto
+
+# Explicitly declare text files
+*.php text
+*.md text
+*.json text
+*.xml text
+*.yml text
+*.yaml text
+*.js text
+*.css text
+*.scss text
+*.html text
+*.blade.php text
+*.sh text
+
+# Denote all files that are truly binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+
+# Shell scripts should use LF
+*.sh text eol=lf
+
+# Batch files should use CRLF
+*.bat text eol=crlf
