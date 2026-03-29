@@ -2,7 +2,7 @@
     "name": "salehye/laravel-seo",
     "description": "Professional Laravel SEO Package - Complete SEO solution for Laravel applications",
     "type": "library",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "license": "MIT",
     "keywords": [
         "laravel",
