@@ -1,0 +1,63 @@
+{
+    "name": "salehye/laravel-seo",
+    "description": "Professional Laravel SEO Package - Complete SEO solution for Laravel applications",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "seo",
+        "meta-tags",
+        "sitemap",
+        "robots",
+        "schema",
+        "open-graph",
+        "twitter-cards",
+        "structured-data"
+    ],
+    "authors": [
+        {
+            "name": "Saleh",
+            "email": "saleh@example.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1|^8.2|^8.3",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "illuminate/console": "^10.0|^11.0|^12.0",
+        "illuminate/database": "^10.0|^11.0|^12.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0|^11.0",
+        "orchestra/testbench": "^8.0|^9.0",
+        "laravel/pint": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Salehye\\Seo\\": "src/"
+        },
+        "files": [
+            "src/Helpers/seo_helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Salehye\\Seo\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Salehye\\Seo\\Providers\\SeoServiceProvider"
+            ],
+            "aliases": {
+                "Seo": "Salehye\\Seo\\Facades\\Seo"
+            }
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    }
+}

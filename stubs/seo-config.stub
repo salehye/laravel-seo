@@ -1,0 +1,77 @@
+<?php
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | SEO Configuration Stub
+    |--------------------------------------------------------------------------
+    |
+    | Copy this configuration to your model and customize it
+    |
+    */
+    
+    // Basic SEO Configuration
+    'title' => $this->title ?? $this->name,
+    'description' => $this->description ?? $this->excerpt,
+    'keywords' => null,
+    'image' => $this->image ?? $this->featured_image,
+    'type' => 'website',
+    
+    // Additional Meta Tags
+    'meta' => [
+        // 'author' => $this->author?->name,
+        // 'published_date' => $this->created_at?->format('Y-m-d'),
+        // 'category' => $this->category?->name,
+    ],
+    
+    // Structured Data Schemas
+    'schemas' => [
+        // Example: Service Schema
+        // [
+        //     'type' => 'Service',
+        //     'name' => $this->name,
+        //     'description' => $this->description,
+        //     'areaServed' => ['@type' => 'City', 'name' => $this->city],
+        //     'offers' => [
+        //         'price' => $this->price,
+        //         'currency' => 'SAR',
+        //     ],
+        // ],
+        
+        // Example: FAQ Schema
+        // [
+        //     'type' => 'FAQ',
+        //     'faqs' => $this->faqs ?? [],
+        // ],
+        
+        // Example: AggregateRating Schema
+        // [
+        //     'type' => 'AggregateRating',
+        //     'rating' => $this->average_rating ?? 0,
+        //     'count' => $this->reviews_count ?? 0,
+        // ],
+    ],
+    
+    // Breadcrumb
+    'breadcrumb' => [
+        ['name' => 'Home', 'url' => url('/')],
+        // ['name' => 'Category', 'url' => route('category.index')],
+        // ['name' => $this->name, 'url' => $this->url],
+    ],
+    
+    // Open Graph Settings
+    'og' => [
+        'type' => 'website',
+        'image:width' => '1200',
+        'image:height' => '630',
+    ],
+    
+    // Twitter Card Settings
+    'twitter' => [
+        'card' => 'summary_large_image',
+        'site' => config('seo.twitter_handle'),
+    ],
+    
+    // Robots Settings
+    'robots' => null, // null = auto (index, follow)
+];
