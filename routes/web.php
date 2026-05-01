@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,20 +14,20 @@ use Illuminate\Support\Facades\Cache;
 
 // Sitemap Route
 Route::get('/sitemap.xml', function () {
-    $cacheKey = config('seo.cache_prefix', 'seo_') . 'sitemap';
-    
-    if (!config('seo.sitemap.enabled', true)) {
+    $cacheKey = config('seo.cache_prefix', 'seo_').'sitemap';
+
+    if (! config('seo.sitemap.enabled', true)) {
         abort(404);
     }
 
     $sitemap = Cache::remember($cacheKey, config('seo.cache_ttl', 3600), function () {
         $urls = [];
-        
+
         // Add static pages from config
         $staticPages = config('seo.sitemap.static_pages', []);
         foreach ($staticPages as $path => $options) {
             $urls[] = [
-                'loc' => config('seo.site_url') . ltrim($path, '/'),
+                'loc' => config('seo.site_url').ltrim($path, '/'),
                 'lastmod' => now()->toIso8601String(),
                 'changefreq' => $options['frequency'] ?? config('seo.sitemap.frequency', 'daily'),
                 'priority' => $options['priority'] ?? config('seo.sitemap.priority', 0.8),
@@ -36,28 +35,28 @@ Route::get('/sitemap.xml', function () {
         }
 
         // Generate XML
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
-        $xml .= '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>' . PHP_EOL;
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"' . PHP_EOL;
-        $xml .= '        xmlns:xhtml="http://www.w3.org/1999/xhtml">' . PHP_EOL;
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'.PHP_EOL;
+        $xml .= '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>'.PHP_EOL;
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'.PHP_EOL;
+        $xml .= '        xmlns:xhtml="http://www.w3.org/1999/xhtml">'.PHP_EOL;
 
         foreach ($urls as $url) {
-            $xml .= '    <url>' . PHP_EOL;
-            $xml .= '        <loc>' . htmlspecialchars($url['loc'], ENT_QUOTES, 'UTF-8') . '</loc>' . PHP_EOL;
-            
+            $xml .= '    <url>'.PHP_EOL;
+            $xml .= '        <loc>'.htmlspecialchars($url['loc'], ENT_QUOTES, 'UTF-8').'</loc>'.PHP_EOL;
+
             if (isset($url['lastmod'])) {
-                $xml .= '        <lastmod>' . $url['lastmod'] . '</lastmod>' . PHP_EOL;
+                $xml .= '        <lastmod>'.$url['lastmod'].'</lastmod>'.PHP_EOL;
             }
-            
+
             if (isset($url['changefreq'])) {
-                $xml .= '        <changefreq>' . $url['changefreq'] . '</changefreq>' . PHP_EOL;
+                $xml .= '        <changefreq>'.$url['changefreq'].'</changefreq>'.PHP_EOL;
             }
-            
+
             if (isset($url['priority'])) {
-                $xml .= '        <priority>' . number_format($url['priority'], 1) . '</priority>' . PHP_EOL;
+                $xml .= '        <priority>'.number_format($url['priority'], 1).'</priority>'.PHP_EOL;
             }
-            
-            $xml .= '    </url>' . PHP_EOL;
+
+            $xml .= '    </url>'.PHP_EOL;
         }
 
         $xml .= '</urlset>';
@@ -72,8 +71,8 @@ Route::get('/sitemap.xml', function () {
 
 // Robots.txt Route
 Route::get('/robots.txt', function () {
-    $cacheKey = config('seo.cache_prefix', 'seo_') . 'robots';
-    
+    $cacheKey = config('seo.cache_prefix', 'seo_').'robots';
+
     $robots = Cache::remember($cacheKey, config('seo.cache_ttl', 3600), function () {
         $lines = [
             'User-agent: *',
@@ -82,12 +81,12 @@ Route::get('/robots.txt', function () {
         // Add disallow rules from config
         $disallow = config('seo.robots_disallow', []);
         foreach ($disallow as $path) {
-            $lines[] = 'Disallow: ' . $path;
+            $lines[] = 'Disallow: '.$path;
         }
 
         // Add sitemap location
         $lines[] = '';
-        $lines[] = 'Sitemap: ' . config('seo.site_url') . '/sitemap.xml';
+        $lines[] = 'Sitemap: '.config('seo.site_url').'/sitemap.xml';
 
         // Add host if needed
         // $lines[] = 'Host: ' . config('seo.site_url');
@@ -102,7 +101,7 @@ Route::get('/robots.txt', function () {
 
 // Sitemap XSL (for pretty viewing in browser)
 Route::get('/sitemap.xsl', function () {
-    $xsl = <<<XSL
+    $xsl = <<<'XSL'
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9">
     <xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>

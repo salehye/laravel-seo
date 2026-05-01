@@ -2,9 +2,7 @@
 
 namespace Salehye\Seo\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Salehye\Seo\Services\SeoService;
-use Salehye\Seo\Services\SchemaBuilder;
 
 class SeoServiceTest extends TestCase
 {

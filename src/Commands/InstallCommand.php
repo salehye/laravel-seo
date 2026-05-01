@@ -63,12 +63,12 @@ class InstallCommand extends Command
     protected function addEnvVariables(): void
     {
         $envExamplePath = base_path('.env.example');
-        
-        if (!file_exists($envExamplePath)) {
+
+        if (! file_exists($envExamplePath)) {
             return;
         }
 
-        $envVars = <<<EOT
+        $envVars = <<<'EOT'
 
 # SEO Configuration
 SEO_SITE_NAME=My Website
@@ -98,8 +98,8 @@ SEO_BING_SITE_VERIFICATION=
 EOT;
 
         $content = file_get_contents($envExamplePath);
-        
-        if (!str_contains($content, '# SEO Configuration')) {
+
+        if (! str_contains($content, '# SEO Configuration')) {
             file_put_contents($envExamplePath, $envVars, FILE_APPEND);
             $this->info('📝 Added SEO variables to .env.example');
         }

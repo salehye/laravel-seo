@@ -2,8 +2,8 @@
 
 Professional Laravel SEO Package - Complete SEO solution for Laravel applications.
 
-![Laravel SEO](https://img.shields.io/badge/Laravel-SEO-red?style=flat-square)
-![PHP](https://img.shields.io/badge/PHP-8.1+-blue?style=flat-square)
+![Laravel SEO](https://img.shields.io/badge/Laravel-10--13-red?style=flat-square)
+![PHP](https://img.shields.io/badge/PHP-8.2+-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 ## Features

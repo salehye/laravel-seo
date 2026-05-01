@@ -62,15 +62,15 @@ class SeoMetadata extends Model
     /**
      * Scope a query to only include SEO data for a specific model.
      */
-    public function scopeForModel($query, string $modelType, int $modelId, string $locale = null)
+    public function scopeForModel($query, string $modelType, int $modelId, ?string $locale = null)
     {
         $query->where('model_type', $modelType)
-              ->where('model_id', $modelId);
-        
+            ->where('model_id', $modelId);
+
         if ($locale) {
             $query->where('locale', $locale);
         }
-        
+
         return $query;
     }
 
@@ -96,7 +96,7 @@ class SeoMetadata extends Model
     public function scopeIndexable($query)
     {
         return $query->where('no_index', false)
-                     ->where('robots', 'LIKE', '%index%');
+            ->where('robots', 'LIKE', '%index%');
     }
 
     /**
@@ -106,11 +106,11 @@ class SeoMetadata extends Model
     {
         $title = $this->meta_title ?? $this->title;
         $siteName = config('seo.site_name');
-        
+
         if (str_contains($title, '|')) {
             return $title;
         }
-        
+
         return "{$title} | {$siteName}";
     }
 
@@ -128,15 +128,15 @@ class SeoMetadata extends Model
     public function getOgImageUrlAttribute(): ?string
     {
         $image = $this->og_image ?? null;
-        
-        if (!$image) {
+
+        if (! $image) {
             return null;
         }
-        
+
         if (filter_var($image, FILTER_VALIDATE_URL)) {
             return $image;
         }
-        
+
         return asset($image);
     }
 
@@ -146,15 +146,15 @@ class SeoMetadata extends Model
     public function getTwitterImageUrlAttribute(): ?string
     {
         $image = $this->twitter_image ?? $this->og_image ?? null;
-        
-        if (!$image) {
+
+        if (! $image) {
             return null;
         }
-        
+
         if (filter_var($image, FILTER_VALIDATE_URL)) {
             return $image;
         }
-        
+
         return asset($image);
     }
 
@@ -165,22 +165,22 @@ class SeoMetadata extends Model
     {
         if ($this->no_index || $this->no_follow) {
             $robots = [];
-            
+
             if ($this->no_index) {
                 $robots[] = 'noindex';
             } else {
                 $robots[] = 'index';
             }
-            
+
             if ($this->no_follow) {
                 $robots[] = 'nofollow';
             } else {
                 $robots[] = 'follow';
             }
-            
+
             return implode(', ', $robots);
         }
-        
+
         return $this->robots ?? 'index, follow';
     }
 
@@ -188,12 +188,12 @@ class SeoMetadata extends Model
      * Create or update SEO data for a model.
      */
     public static function createOrUpdateForModel(
-        Model $model, 
-        array $data, 
-        string $locale = null
+        Model $model,
+        array $data,
+        ?string $locale = null
     ): self {
         $locale = $locale ?? app()->getLocale();
-        
+
         return static::updateOrCreate(
             [
                 'model_type' => get_class($model),
@@ -208,14 +208,14 @@ class SeoMetadata extends Model
      * Get SEO data for a model.
      */
     public static function forModel(
-        Model $model, 
-        string $locale = null
+        Model $model,
+        ?string $locale = null
     ): ?self {
         $locale = $locale ?? app()->getLocale();
-        
+
         return static::forModel(
-            get_class($model), 
-            $model->getKey(), 
+            get_class($model),
+            $model->getKey(),
             $locale
         )->first();
     }

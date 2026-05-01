@@ -3,6 +3,7 @@
 namespace Salehye\Seo\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Salehye\Seo\Services\SeoService;
 
 /**
  * @method static static make()
@@ -45,7 +46,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static static \Salehye\Seo\Services\SeoTagBuilder getTagBuilder()
  * @method static static clear()
  *
- * @see \Salehye\Seo\Services\SeoService
+ * @see SeoService
  */
 class Seo extends Facade
 {

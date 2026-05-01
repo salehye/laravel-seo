@@ -2,15 +2,13 @@
 
 namespace Salehye\Seo\Services;
 
-use Salehye\Seo\Services\SchemaBuilder;
-
 class SeoService
 {
     protected SeoTagBuilder $tagBuilder;
 
     public function __construct()
     {
-        $this->tagBuilder = new SeoTagBuilder();
+        $this->tagBuilder = new SeoTagBuilder;
     }
 
     /**
@@ -18,7 +16,7 @@ class SeoService
      */
     public static function make(): self
     {
-        return new static();
+        return new static;
     }
 
     /*
@@ -33,6 +31,7 @@ class SeoService
     public function title(string $title, ?string $suffix = null): self
     {
         $this->tagBuilder->title($title, $suffix);
+
         return $this;
     }
 
@@ -42,6 +41,7 @@ class SeoService
     public function description(string $description, int $limit = 160): self
     {
         $this->tagBuilder->description($description, $limit);
+
         return $this;
     }
 
@@ -51,6 +51,7 @@ class SeoService
     public function keywords(string|array $keywords): self
     {
         $this->tagBuilder->keywords($keywords);
+
         return $this;
     }
 
@@ -60,6 +61,7 @@ class SeoService
     public function type(string $type): self
     {
         $this->tagBuilder->og('type', $type);
+
         return $this;
     }
 
@@ -69,6 +71,7 @@ class SeoService
     public function image(string $url, ?string $alt = null, ?int $width = null, ?int $height = null): self
     {
         $this->tagBuilder->imageOpenGraph($url, $alt, $width, $height);
+
         return $this;
     }
 
@@ -78,6 +81,7 @@ class SeoService
     public function canonical(string $url): self
     {
         $this->tagBuilder->canonical($url);
+
         return $this;
     }
 
@@ -87,6 +91,7 @@ class SeoService
     public function robots(string $robots): self
     {
         $this->tagBuilder->robots($robots);
+
         return $this;
     }
 
@@ -96,6 +101,7 @@ class SeoService
     public function addMeta(string $name, string $content, string $type = 'name'): self
     {
         $this->tagBuilder->addMeta($name, $content, $type);
+
         return $this;
     }
 
@@ -111,6 +117,7 @@ class SeoService
     public function addOrganizationSchema(array $data = []): self
     {
         $this->tagBuilder->schema(SchemaBuilder::organization($data), 'organization');
+
         return $this;
     }
 
@@ -120,6 +127,7 @@ class SeoService
     public function addWebsiteSchema(array $data = []): self
     {
         $this->tagBuilder->schema(SchemaBuilder::website($data), 'website');
+
         return $this;
     }
 
@@ -129,6 +137,7 @@ class SeoService
     public function addWebPageSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::webPage($data), 'webpage');
+
         return $this;
     }
 
@@ -138,6 +147,7 @@ class SeoService
     public function addLocalBusinessSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::localBusiness($data), 'localBusiness');
+
         return $this;
     }
 
@@ -153,6 +163,7 @@ class SeoService
     public function addServiceSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::service($data), 'service');
+
         return $this;
     }
 
@@ -162,6 +173,7 @@ class SeoService
     public function addProductSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::product($data), 'product');
+
         return $this;
     }
 
@@ -171,6 +183,7 @@ class SeoService
     public function addArticleSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::article($data), 'article');
+
         return $this;
     }
 
@@ -180,6 +193,7 @@ class SeoService
     public function addBlogPostingSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::blogPosting($data), 'blogPosting');
+
         return $this;
     }
 
@@ -189,6 +203,7 @@ class SeoService
     public function addNewsArticleSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::newsArticle($data), 'newsArticle');
+
         return $this;
     }
 
@@ -204,6 +219,7 @@ class SeoService
     public function addFaqSchema(array $faqs): self
     {
         $this->tagBuilder->schema(SchemaBuilder::faq($faqs), 'faq');
+
         return $this;
     }
 
@@ -213,6 +229,7 @@ class SeoService
     public function addAggregateRatingSchema(float $rating, int $count): self
     {
         $this->tagBuilder->schema(SchemaBuilder::aggregateRating($rating, $count), 'aggregateRating');
+
         return $this;
     }
 
@@ -222,6 +239,7 @@ class SeoService
     public function addReviewSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::review($data), 'review');
+
         return $this;
     }
 
@@ -231,6 +249,7 @@ class SeoService
     public function addBreadcrumbSchema(array $items): self
     {
         $this->tagBuilder->schema(SchemaBuilder::breadcrumb($items), 'breadcrumb');
+
         return $this;
     }
 
@@ -240,6 +259,7 @@ class SeoService
     public function addItemListSchema(array $items, string $name): self
     {
         $this->tagBuilder->schema(SchemaBuilder::itemList($items, $name), 'itemList');
+
         return $this;
     }
 
@@ -255,6 +275,7 @@ class SeoService
     public function addEventSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::event($data), 'event');
+
         return $this;
     }
 
@@ -264,6 +285,7 @@ class SeoService
     public function addCitySchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::city($data), 'city');
+
         return $this;
     }
 
@@ -279,6 +301,7 @@ class SeoService
     public function addPersonSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::person($data), 'person');
+
         return $this;
     }
 
@@ -288,6 +311,7 @@ class SeoService
     public function addVideoSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::video($data), 'video');
+
         return $this;
     }
 
@@ -297,6 +321,7 @@ class SeoService
     public function addRecipeSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::recipe($data), 'recipe');
+
         return $this;
     }
 
@@ -306,6 +331,7 @@ class SeoService
     public function addJobPostingSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::jobPosting($data), 'jobPosting');
+
         return $this;
     }
 
@@ -315,6 +341,7 @@ class SeoService
     public function addCourseSchema(array $data): self
     {
         $this->tagBuilder->schema(SchemaBuilder::course($data), 'course');
+
         return $this;
     }
 
@@ -324,6 +351,7 @@ class SeoService
     public function addStructuredData(array $data, ?string $key = null): self
     {
         $this->tagBuilder->schema($data, $key);
+
         return $this;
     }
 
@@ -341,6 +369,7 @@ class SeoService
         foreach ($data as $property => $content) {
             $this->tagBuilder->og($property, $content);
         }
+
         return $this;
     }
 
@@ -352,6 +381,7 @@ class SeoService
         foreach ($data as $name => $content) {
             $this->tagBuilder->twitter($name, $content);
         }
+
         return $this;
     }
 
@@ -426,6 +456,7 @@ class SeoService
     public function clear(): self
     {
         $this->tagBuilder->clear();
+
         return $this;
     }
 }

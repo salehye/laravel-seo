@@ -5,6 +5,24 @@ All notable changes to `salehye/laravel-seo` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-05-01
+
+### Added
+- Support for Laravel 13.
+- Support for PHP 8.4.
+- Added `applySeo()` method to `HasSeo` trait for easier global application.
+- Added base `TestCase` for easier package testing.
+- Added `composer` scripts for `test`, `format`, and `test-coverage`.
+
+### Changed
+- Refactored `seo_helpers.php` to use a unified singleton state via `app('seo')`.
+- Improved consistency between `SeoService` and `HasSeo` trait.
+- Updated documentation with modern examples.
+- Standardized code style using Laravel Pint.
+
+### Fixed
+- Fixed issues with `SeoService` testing environment.
+
 ## [1.0.0] - 2024-03-29
 
 ### Added

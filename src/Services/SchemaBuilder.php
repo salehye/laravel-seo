@@ -38,7 +38,7 @@ class SchemaBuilder
             'url' => config('seo.site_url'),
             'potentialAction' => [
                 '@type' => 'SearchAction',
-                'target' => config('seo.site_url') . '/search?q={search_term_string}',
+                'target' => config('seo.site_url').'/search?q={search_term_string}',
                 'query-input' => 'required name=search_term_string',
             ],
             'inLanguage' => config('seo.language'),
@@ -90,8 +90,8 @@ class SchemaBuilder
                 '@type' => 'Offer',
                 'price' => $data['offers']['price'],
                 'priceCurrency' => $data['offers']['currency'] ?? 'SAR',
-                'availability' => $data['offers']['inStock'] 
-                    ? 'https://schema.org/InStock' 
+                'availability' => $data['offers']['inStock']
+                    ? 'https://schema.org/InStock'
                     : 'https://schema.org/OutOfStock',
             ];
         }
@@ -124,8 +124,8 @@ class SchemaBuilder
                 '@type' => 'Offer',
                 'price' => $data['price'],
                 'priceCurrency' => $data['currency'] ?? 'SAR',
-                'availability' => $data['inStock'] ?? true 
-                    ? 'https://schema.org/InStock' 
+                'availability' => $data['inStock'] ?? true
+                    ? 'https://schema.org/InStock'
                     : 'https://schema.org/OutOfStock',
             ],
         ];
@@ -202,6 +202,7 @@ class SchemaBuilder
     {
         $schema = self::article($data);
         $schema['@type'] = 'BlogPosting';
+
         return $schema;
     }
 
@@ -212,6 +213,7 @@ class SchemaBuilder
     {
         $schema = self::article($data);
         $schema['@type'] = 'NewsArticle';
+
         return $schema;
     }
 

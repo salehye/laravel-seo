@@ -7,10 +7,15 @@ use Illuminate\Support\Str;
 class SeoTagBuilder
 {
     protected array $tags = [];
+
     protected array $structuredData = [];
+
     protected array $openGraph = [];
+
     protected array $twitterCard = [];
+
     protected array $links = [];
+
     protected array $additionalMeta = [];
 
     /**
@@ -19,9 +24,10 @@ class SeoTagBuilder
     public function title(string $title, ?string $suffix = null): self
     {
         $siteName = config('seo.site_name');
-        $this->tags['title'] = $suffix 
-            ? "{$title} | {$suffix}" 
+        $this->tags['title'] = $suffix
+            ? "{$title} | {$suffix}"
             : (Str::contains($title, '|') ? $title : "{$title} | {$siteName}");
+
         return $this;
     }
 
@@ -31,6 +37,7 @@ class SeoTagBuilder
     public function description(string $description, int $limit = 160): self
     {
         $this->tags['description'] = Str::limit($description, $limit);
+
         return $this;
     }
 
@@ -39,9 +46,10 @@ class SeoTagBuilder
      */
     public function keywords(string|array $keywords): self
     {
-        $this->tags['keywords'] = is_array($keywords) 
-            ? implode(', ', array_unique($keywords)) 
+        $this->tags['keywords'] = is_array($keywords)
+            ? implode(', ', array_unique($keywords))
             : $keywords;
+
         return $this;
     }
 
@@ -51,6 +59,7 @@ class SeoTagBuilder
     public function robots(string $robots): self
     {
         $this->tags['robots'] = $robots;
+
         return $this;
     }
 
@@ -60,6 +69,7 @@ class SeoTagBuilder
     public function author(string $author): self
     {
         $this->tags['author'] = $author;
+
         return $this;
     }
 
@@ -69,6 +79,7 @@ class SeoTagBuilder
     public function canonical(string $url): self
     {
         $this->links['canonical'] = $url;
+
         return $this;
     }
 
@@ -78,6 +89,7 @@ class SeoTagBuilder
     public function alternate(string $lang, string $url): self
     {
         $this->links['alternate'][$lang] = $url;
+
         return $this;
     }
 
@@ -89,6 +101,7 @@ class SeoTagBuilder
         foreach ($languages as $lang => $url) {
             $this->alternate($lang, $url);
         }
+
         return $this;
     }
 
@@ -98,6 +111,7 @@ class SeoTagBuilder
     public function og(string $property, string $content): self
     {
         $this->openGraph[$property] = $content;
+
         return $this;
     }
 
@@ -105,9 +119,9 @@ class SeoTagBuilder
      * Set basic Open Graph tags
      */
     public function basicOpenGraph(
-        string $title, 
-        string $description, 
-        string $url, 
+        string $title,
+        string $description,
+        string $url,
         string $image
     ): self {
         return $this->og('title', $title)
@@ -122,15 +136,22 @@ class SeoTagBuilder
      * Set Open Graph image with optional dimensions and alt
      */
     public function imageOpenGraph(
-        string $url, 
-        ?string $alt = null, 
-        ?int $width = null, 
+        string $url,
+        ?string $alt = null,
+        ?int $width = null,
         ?int $height = null
     ): self {
         $this->og('image', $url);
-        if ($alt) $this->og('image:alt', $alt);
-        if ($width) $this->og('image:width', $width);
-        if ($height) $this->og('image:height', $height);
+        if ($alt) {
+            $this->og('image:alt', $alt);
+        }
+        if ($width) {
+            $this->og('image:width', $width);
+        }
+        if ($height) {
+            $this->og('image:height', $height);
+        }
+
         return $this;
     }
 
@@ -140,6 +161,7 @@ class SeoTagBuilder
     public function twitter(string $name, string $content): self
     {
         $this->twitterCard[$name] = $content;
+
         return $this;
     }
 
@@ -147,9 +169,9 @@ class SeoTagBuilder
      * Set basic Twitter Card tags
      */
     public function basicTwitterCard(
-        string $title, 
-        string $description, 
-        string $image, 
+        string $title,
+        string $description,
+        string $image,
         string $card = 'summary_large_image'
     ): self {
         return $this->twitter('card', $card)
@@ -169,6 +191,7 @@ class SeoTagBuilder
         } else {
             $this->structuredData[] = $data;
         }
+
         return $this;
     }
 
@@ -182,6 +205,7 @@ class SeoTagBuilder
             'name' => $name,
             'content' => $content,
         ];
+
         return $this;
     }
 
@@ -259,7 +283,7 @@ class SeoTagBuilder
         // Structured Data (JSON-LD)
         foreach ($data['structured_data'] as $schema) {
             $json = json_encode(
-                $schema, 
+                $schema,
                 JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
             );
             $html[] = "<script type=\"application/ld+json\">\n{$json}\n</script>";
@@ -287,6 +311,7 @@ class SeoTagBuilder
         $this->twitterCard = [];
         $this->links = [];
         $this->additionalMeta = [];
+
         return $this;
     }
 }

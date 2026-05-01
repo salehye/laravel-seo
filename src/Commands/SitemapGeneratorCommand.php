@@ -23,16 +23,16 @@ class SitemapGeneratorCommand extends Command
     public function handle(): int
     {
         $output = $this->option('output') ?? public_path('sitemap.xml');
-        
+
         $this->info('🗺️ Generating sitemap...');
 
         $urls = [];
-        
+
         // Add static pages from config
         $staticPages = config('seo.sitemap.static_pages', []);
         foreach ($staticPages as $path => $options) {
             $urls[] = [
-                'loc' => config('seo.site_url') . ltrim($path, '/'),
+                'loc' => config('seo.site_url').ltrim($path, '/'),
                 'lastmod' => now()->toIso8601String(),
                 'changefreq' => $options['frequency'] ?? config('seo.sitemap.frequency', 'daily'),
                 'priority' => $options['priority'] ?? config('seo.sitemap.priority', 0.8),
@@ -47,13 +47,13 @@ class SitemapGeneratorCommand extends Command
 
         // Generate XML
         $xml = $this->generateXml($urls);
-        
+
         // Save to file
         File::put($output, $xml);
-        
+
         $this->info('✅ Sitemap generated successfully!');
-        $this->info('📁 Saved to: ' . $output);
-        $this->info('📊 Total URLs: ' . count($urls));
+        $this->info('📁 Saved to: '.$output);
+        $this->info('📊 Total URLs: '.count($urls));
 
         return Command::SUCCESS;
     }
@@ -77,17 +77,17 @@ class SitemapGeneratorCommand extends Command
      */
     protected function addModelUrls(string $model, array &$urls): void
     {
-        if (!class_exists($model)) {
+        if (! class_exists($model)) {
             return;
         }
 
         try {
             $instances = $model::all();
-            
+
             foreach ($instances as $instance) {
                 if (method_exists($instance, 'getModelUrl')) {
                     $url = $instance->getModelUrl();
-                    
+
                     if ($url) {
                         $urls[] = [
                             'loc' => $url,
@@ -98,10 +98,10 @@ class SitemapGeneratorCommand extends Command
                     }
                 }
             }
-            
+
             $this->info("  ✓ Added URLs from {$model}");
         } catch (\Exception $e) {
-            $this->warn("  ⚠️ Error loading {$model}: " . $e->getMessage());
+            $this->warn("  ⚠️ Error loading {$model}: ".$e->getMessage());
         }
     }
 
@@ -110,30 +110,30 @@ class SitemapGeneratorCommand extends Command
      */
     protected function generateXml(array $urls): string
     {
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
-        $xml .= '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>' . PHP_EOL;
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"' . PHP_EOL;
-        $xml .= '        xmlns:xhtml="http://www.w3.org/1999/xhtml"' . PHP_EOL;
-        $xml .= '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"' . PHP_EOL;
-        $xml .= '        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">' . PHP_EOL;
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'.PHP_EOL;
+        $xml .= '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>'.PHP_EOL;
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'.PHP_EOL;
+        $xml .= '        xmlns:xhtml="http://www.w3.org/1999/xhtml"'.PHP_EOL;
+        $xml .= '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'.PHP_EOL;
+        $xml .= '        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">'.PHP_EOL;
 
         foreach ($urls as $url) {
-            $xml .= '    <url>' . PHP_EOL;
-            $xml .= '        <loc>' . htmlspecialchars($url['loc'], ENT_QUOTES, 'UTF-8') . '</loc>' . PHP_EOL;
-            
+            $xml .= '    <url>'.PHP_EOL;
+            $xml .= '        <loc>'.htmlspecialchars($url['loc'], ENT_QUOTES, 'UTF-8').'</loc>'.PHP_EOL;
+
             if (isset($url['lastmod'])) {
-                $xml .= '        <lastmod>' . $url['lastmod'] . '</lastmod>' . PHP_EOL;
+                $xml .= '        <lastmod>'.$url['lastmod'].'</lastmod>'.PHP_EOL;
             }
-            
+
             if (isset($url['changefreq'])) {
-                $xml .= '        <changefreq>' . $url['changefreq'] . '</changefreq>' . PHP_EOL;
+                $xml .= '        <changefreq>'.$url['changefreq'].'</changefreq>'.PHP_EOL;
             }
-            
+
             if (isset($url['priority'])) {
-                $xml .= '        <priority>' . number_format($url['priority'], 1) . '</priority>' . PHP_EOL;
+                $xml .= '        <priority>'.number_format($url['priority'], 1).'</priority>'.PHP_EOL;
             }
-            
-            $xml .= '    </url>' . PHP_EOL;
+
+            $xml .= '    </url>'.PHP_EOL;
         }
 
         $xml .= '</urlset>';

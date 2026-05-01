@@ -141,7 +141,6 @@ JSON-LD structure.
 
 namespace Salehye\Seo\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Salehye\Seo\Services\SeoService;
 
 class YourTest extends TestCase
@@ -150,10 +149,11 @@ class YourTest extends TestCase
     public function it_can_do_something()
     {
         // Arrange
-        $seo = SeoService::make();
+        $seo = seo();
         
         // Act
-        $result = $seo->title('Test')->generate();
+        $seo->title('Test');
+        $result = $seo->generate();
         
         // Assert
         $this->assertStringContainsString('Test', $result['title']);

@@ -2,9 +2,9 @@
 
 namespace Salehye\Seo\Traits;
 
-use Salehye\Seo\Services\SeoService;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
+use Salehye\Seo\Services\SeoService;
 
 trait HasSeo
 {
@@ -21,22 +21,22 @@ trait HasSeo
             'keywords' => $this->seo_keywords ?? null,
             'image' => $this->seo_image ?? $this->image ?? null,
             'type' => 'website',
-            
+
             // Additional meta tags
             'meta' => [],
-            
+
             // Schemas (can add multiple)
             'schemas' => [],
-            
+
             // Breadcrumb
             'breadcrumb' => null,
-            
+
             // Open Graph
             'og' => [],
-            
+
             // Twitter Card
             'twitter' => [],
-            
+
             // Robots settings
             'robots' => null,
         ];
@@ -47,13 +47,44 @@ trait HasSeo
      */
     public function generateSeo(array $overrides = []): array
     {
+        return $this->seo($overrides)->generate();
+    }
+
+    /**
+     * Apply model SEO to the global singleton
+     */
+    public function applySeo(array $overrides = []): SeoService
+    {
         $config = array_merge($this->seoConfig(), $overrides);
-        
-        $seo = SeoService::make()
-            ->title($this->formatTitle($config['title']))
+        $seo = seo();
+
+        $this->populateSeoService($seo, $config);
+
+        return $seo;
+    }
+
+    /**
+     * Get a configured SEO service instance
+     */
+    public function seo(array $overrides = []): SeoService
+    {
+        $config = array_merge($this->seoConfig(), $overrides);
+        $seo = new SeoService;
+
+        $this->populateSeoService($seo, $config);
+
+        return $seo;
+    }
+
+    /**
+     * Populate SEO service with model data
+     */
+    protected function populateSeoService(SeoService $seo, array $config): void
+    {
+        $seo->title($this->formatTitle($config['title']))
             ->description(Str::limit($config['description'] ?? '', 160))
             ->keywords($config['keywords'] ?? '')
-            ->type($config['type'])
+            ->type($config['type'] ?? 'website')
             ->image($this->getImageUrl($config['image']))
             ->canonical($this->getCanonicalUrl());
 
@@ -63,8 +94,6 @@ trait HasSeo
         $this->addOpenGraph($seo, $config);
         $this->addTwitterCard($seo, $config);
         $this->addRobots($seo, $config);
-
-        return $seo->generate();
     }
 
     /**
@@ -72,11 +101,11 @@ trait HasSeo
      */
     public function generateSeoWithCache(int $ttl = 3600): array
     {
-        if (!config('seo.cache_enabled', true)) {
+        if (! config('seo.cache_enabled', true)) {
             return $this->generateSeo();
         }
 
-        return Cache::remember($this->getCacheKey(), $ttl, fn() => $this->generateSeo());
+        return Cache::remember($this->getCacheKey(), $ttl, fn () => $this->generateSeo());
     }
 
     /**
@@ -85,14 +114,6 @@ trait HasSeo
     public function clearSeoCache(): void
     {
         Cache::forget($this->getCacheKey());
-    }
-
-    /**
-     * Get SEO service instance for customization
-     */
-    public function seo(): SeoService
-    {
-        return SeoService::make();
     }
 
     /*
@@ -107,10 +128,11 @@ trait HasSeo
     protected function getCacheKey(): string
     {
         $prefix = config('seo.cache_prefix', 'seo_');
+
         return sprintf(
-            '%s%s_%s', 
-            $prefix, 
-            strtolower(class_basename($this)), 
+            '%s%s_%s',
+            $prefix,
+            strtolower(class_basename($this)),
             $this->getKey() ?? 'new'
         );
     }
@@ -120,13 +142,13 @@ trait HasSeo
      */
     protected function formatTitle(?string $title): string
     {
-        if (!$title) {
+        if (! $title) {
             return config('seo.site_name');
         }
-        
-        return Str::contains($title, '|') 
-            ? $title 
-            : "{$title} | " . config('seo.site_name');
+
+        return Str::contains($title, '|')
+            ? $title
+            : "{$title} | ".config('seo.site_name');
     }
 
     /**
@@ -134,17 +156,17 @@ trait HasSeo
      */
     protected function getImageUrl($image): ?string
     {
-        if (!$image) {
+        if (! $image) {
             return null;
         }
-        
+
         // If already a full URL, return as is
         if (filter_var($image, FILTER_VALIDATE_URL)) {
             return $image;
         }
-        
+
         // Otherwise, prepend storage URL
-        return asset('storage/' . $image);
+        return asset('storage/'.$image);
     }
 
     /**
@@ -156,7 +178,7 @@ trait HasSeo
         if (isset($this->seo_canonical)) {
             return $this->seo_canonical;
         }
-        
+
         // Try to get model URL
         return $this->getModelUrl() ?? url()->current();
     }
@@ -170,7 +192,7 @@ trait HasSeo
         if (isset($this->slug)) {
             return url($this->slug);
         }
-        
+
         // If model has a route
         if (method_exists($this, 'getRouteKeyName')) {
             $routeKey = $this->getRouteKeyName();
@@ -182,7 +204,7 @@ trait HasSeo
                 }
             }
         }
-        
+
         return null;
     }
 
@@ -192,6 +214,7 @@ trait HasSeo
     protected function getRouteName(): string
     {
         $plural = Str::plural(Str::kebab(class_basename($this)));
+
         return "{$plural}.show";
     }
 
@@ -206,20 +229,20 @@ trait HasSeo
                 $seo->addMeta($name, $content);
             }
         }
-        
+
         // Add common meta tags if available
         if (isset($this->author)) {
             $seo->addMeta('author', $this->author);
         }
-        
+
         if (isset($this->created_at)) {
             $seo->addMeta('published_date', $this->created_at->format('Y-m-d'));
         }
-        
+
         if (isset($this->category)) {
             $seo->addMeta('category', $this->category);
         }
-        
+
         if (isset($this->tags)) {
             $tags = is_array($this->tags) ? implode(',', $this->tags) : $this->tags;
             $seo->addMeta('tags', $tags);
@@ -232,16 +255,16 @@ trait HasSeo
     protected function addSchemas(SeoService $seo, array $config): void
     {
         $schemas = $config['schemas'];
-        
+
         // If single schema (not array of arrays)
         if (isset($schemas['type'])) {
             $schemas = [$schemas];
         }
-        
+
         foreach (array_filter($schemas) as $schema) {
             $type = $schema['type'] ?? 'Service';
             unset($schema['type']);
-            
+
             match ($type) {
                 'Organization' => $seo->addOrganizationSchema($schema),
                 'Website' => $seo->addWebsiteSchema($schema),
@@ -256,7 +279,7 @@ trait HasSeo
                 'LocalBusiness' => $seo->addLocalBusinessSchema($schema),
                 'FAQ' => $seo->addFaqSchema($schema['faqs'] ?? []),
                 'AggregateRating' => $seo->addAggregateRatingSchema(
-                    $schema['rating'] ?? 0, 
+                    $schema['rating'] ?? 0,
                     $schema['count'] ?? 0
                 ),
                 'Review' => $seo->addReviewSchema($schema),
@@ -276,7 +299,7 @@ trait HasSeo
     protected function addBreadcrumb(SeoService $seo, array $config): void
     {
         $breadcrumb = $config['breadcrumb'] ?? $this->getDefaultBreadcrumb();
-        
+
         if ($breadcrumb && count($breadcrumb) > 1) {
             $seo->addBreadcrumbSchema($breadcrumb);
         }
@@ -288,15 +311,15 @@ trait HasSeo
     protected function getDefaultBreadcrumb(): array
     {
         $breadcrumb = [['name' => 'Home', 'url' => url('/')]];
-        
+
         $name = $this->title ?? $this->name ?? null;
         if ($name) {
             $breadcrumb[] = [
-                'name' => $name, 
-                'url' => $this->getModelUrl()
+                'name' => $name,
+                'url' => $this->getModelUrl(),
             ];
         }
-        
+
         return $breadcrumb;
     }
 
@@ -311,13 +334,13 @@ trait HasSeo
             'image' => $config['image'],
             'type' => $config['type'],
         ], $config['og']);
-        
+
         foreach ($og as $property => $content) {
             if ($content) {
                 $seo->addMeta("og:{$property}", $content, 'property');
             }
         }
-        
+
         // Add image dimensions if image exists
         if ($config['image']) {
             $seo->addMeta('og:image:width', '1200', 'property');
@@ -336,7 +359,7 @@ trait HasSeo
             'description' => $config['description'],
             'image' => $config['image'],
         ], $config['twitter']);
-        
+
         foreach ($twitter as $name => $content) {
             if ($content) {
                 $seo->addMeta("twitter:{$name}", $content, 'name');
@@ -352,22 +375,23 @@ trait HasSeo
         // If explicitly set in config
         if ($config['robots']) {
             $seo->robots($config['robots']);
+
             return;
         }
-        
+
         // Build robots from model properties
         $robots = ['index', 'follow'];
-        
+
         if (isset($this->no_index) && $this->no_index) {
             $robots = array_diff($robots, ['index']);
             $robots[] = 'noindex';
         }
-        
+
         if (isset($this->no_follow) && $this->no_follow) {
             $robots = array_diff($robots, ['follow']);
             $robots[] = 'nofollow';
         }
-        
+
         $seo->robots(implode(', ', $robots));
     }
 }

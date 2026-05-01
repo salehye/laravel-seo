@@ -7,15 +7,25 @@ use Illuminate\View\Component;
 class Seo extends Component
 {
     public array $seo;
+
     public ?string $title;
+
     public ?string $description;
+
     public ?string $keywords;
+
     public ?string $image;
+
     public ?string $canonical;
+
     public ?string $robots;
+
     public array $alternateLanguages;
+
     public array $structuredData;
+
     public array $openGraph;
+
     public array $twitterCard;
 
     /**
@@ -66,9 +76,9 @@ class Seo extends Component
         $this->description ??= config('seo.default_description', '');
         $this->keywords ??= config('seo.default_keywords', '');
         $this->image ??= config('seo.default_image', 'images/default-og-image.jpg');
-        
+
         // Convert relative image paths to absolute URLs
-        if ($this->image && !filter_var($this->image, FILTER_VALIDATE_URL)) {
+        if ($this->image && ! filter_var($this->image, FILTER_VALIDATE_URL)) {
             $this->image = asset($this->image);
         }
     }
